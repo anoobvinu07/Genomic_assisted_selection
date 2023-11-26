@@ -1,0 +1,23 @@
+project:
+  type: book
+  output-dir: docs 
+book:
+  title: "Bringing genomics to the field"
+  author: "Anoob Prakash"
+  date: "11/26/2023"
+  chapters:
+    - index.qmd
+    - gd_gl_vs_earlyLife_fitness.qmd
+    - genomics_informed_provenancing.qmd
+    - references.qmd
+
+bibliography: citations.bib
+
+format:
+  html:
+    theme: journal
+  pdf:
+    documentclass: scrreprt
+
+editor: visual
+

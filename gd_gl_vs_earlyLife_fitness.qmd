@@ -1,0 +1,99 @@
+# Why GD and GL?   
+
+@Capblancq2021 observed strong positive association between genetic diversity (GD) and Early-Life fitness, and negative assoaciation between genetic load (GL) and Early-Life fitness of red spruce. We use this information for the range edge of red spruce to select for source combinations with high GD and low GL. The fitness was estimated based on the mean family level fitness for each populations. The mean of the resulting pop combinations are then used as fitness estimate for the respective combinations.      
+
+
+
+## Genetic diversity and Genetic load   
+```{r echo=F}
+# setwd("~/mydata/Anoob/TNC/ANALYSIS")
+```
+
+```{r, warning=F,message=F}
+require(tidyverse)
+require(lmerTest)
+require(sjPlot)
+require(ggpubr)
+```
+
+```{r}
+GDGL_list <- readRDS("./data/Genetic_diversity_and_Genetic_load/GDGL_list")
+MD_GDGL <- GDGL_list$Maryland_GDGL
+WV_GDGL <- GDGL_list$West_Virginia_GDGL
+VA_GDGL <- GDGL_list$Virginia_GDGL
+
+MD_GDGL <- MD_GDGL[-1,]
+WV_GDGL <- WV_GDGL[-1,]
+VA_GDGL <- VA_GDGL[-1,]
+```
+
+## Early-Life fitness 
+```{r, warning=F,message=F}
+fitness <- read.table("./data/FitnessTraits_GeneticParameters_RedSpruce.txt",
+                      header = T, stringsAsFactors = T)
+fitness$Region <- factor(fitness$Region, levels = c("C","M","E"),
+                                         labels = c("Core","Margin","Edge"))
+```
+
+## Model stats
+```{r, warning=F,message=F}
+# model
+modelFitness <- lm(Fitness ~ Population_Homozygosity + Family_Homozygosity + Genetic_Diversity + Genetic_Load + SeedWeight, data=fitness %>% filter(Region=="Edge"))
+
+# modelFitness <- lm(Fitness ~ Genetic_Diversity + Genetic_Load + SeedWeight + Region + Region*Genetic_Diversity + Region*Genetic_Load, data=fitness)
+summary(modelFitness)
+```
+
+## Model Viz.
+```{r, warning=F,message=F}
+# model marginal effects
+p1 <- plot_model(modelFitness, type = "pred", terms = c("Genetic_Diversity"),
+                 title = "", axis.title = "") + 
+  # aes(linetype=group,color=group)+
+  geom_line(alpha=1, linewidth=1) +
+  # scale_linetype_manual(values = c("solid", "dashed", "dotted"),
+                        # name = "Region", 
+                        # labels = c("Core", "Margin","Edge"))+ 
+  facet_wrap(~"Genetic Diversity") + 
+  # ylim(-20,40) + 
+  labs(y="Early-Life Fitness")+
+  theme_bw(base_size = 11, base_family = "Times") +
+            theme(axis.text=element_text(size=14), 
+                  axis.title=element_text(size=18),
+                  panel.background = element_blank(), 
+                  legend.background = element_blank(), 
+                  panel.grid = element_blank(), 
+                  plot.background = element_blank(), 
+                  legend.text=element_text(size=rel(.8)), 
+                  strip.text = element_text(size=30)) +
+  theme(axis.title.x=element_blank(), panel.grid = element_blank(),
+        legend.key=element_blank(), legend.background=element_blank())
+
+p2 <- plot_model(modelFitness, type = "pred", terms = c("Genetic_Load"), 
+                 title = "", axis.title = "") + 
+  # aes(linetype=group,color=group)+
+  geom_line(alpha=1, size=1) +
+  # scale_linetype_manual(values = c("solid", "dashed", "dotted"),
+  #                       name = "Region", 
+  #                       labels = c("Core", "Margin","Edge"))+
+  facet_wrap(~"Genetic Load") + 
+  # ylim(-20,40) + 
+  # labs(color  = "Region", linetype = "Region")+
+  theme_bw(base_size = 11, base_family = "Times") +
+            theme(axis.text=element_text(size=14), 
+                  axis.title=element_text(size=18),
+                  panel.background = element_blank(), 
+                  legend.background = element_blank(), 
+                  panel.grid = element_blank(), 
+                  plot.background = element_blank(), 
+                  legend.text=element_text(size=rel(.8)), 
+                  strip.text = element_text(size=30)) +
+  theme(axis.title.x=element_blank(), axis.text.y = element_blank(), axis.ticks.y = element_blank(), panel.grid = element_blank())
+```
+
+
+```{r, warning=F,message=F, fig.dim=c(9,4.5)}
+# dim 900w 450h jpg 4.5h 9w pdf
+ggarrange(p1,p2, ncol = 2, common.legend = T, legend = "right", widths = c(1.1,1,1,1))
+
+```
