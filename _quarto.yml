@@ -9,6 +9,7 @@ book:
     - index.qmd
     - gd_gl_vs_earlyLife_fitness.qmd
     - genomics_informed_provenancing.qmd
+    - experimental_plots.qmd
     - references.qmd
 
 bibliography: citations.bib

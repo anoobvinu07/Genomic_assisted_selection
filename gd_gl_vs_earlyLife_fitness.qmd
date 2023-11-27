@@ -93,7 +93,10 @@ p2 <- plot_model(modelFitness, type = "pred", terms = c("Genetic_Load"),
 
 
 ```{r, warning=F,message=F, fig.dim=c(9,4.5)}
-# dim 900w 450h jpg 4.5h 9w pdf
+#| label: gdgl-fitness
+#| fig-cap: "Early-Life fitness of seedlings from range edge against different genetic metrics"
+
+
 ggarrange(p1,p2, ncol = 2, common.legend = T, legend = "right", widths = c(1.1,1,1,1))
 
 ```
