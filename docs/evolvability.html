@@ -20,6 +20,40 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -62,6 +96,22 @@ ul.task-list li input[type="checkbox"] {
   }
 }</script>
 
+<script src="site_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
+<script src="site_libs/datatables-binding-0.27/datatables.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="site_libs/dt-core-1.12.1/css/jquery.dataTables.min.css" rel="stylesheet">
+<link href="site_libs/dt-core-1.12.1/css/jquery.dataTables.extra.css" rel="stylesheet">
+<script src="site_libs/dt-core-1.12.1/js/jquery.dataTables.min.js"></script>
+<link href="site_libs/nouislider-7.0.10/jquery.nouislider.min.css" rel="stylesheet">
+<script src="site_libs/nouislider-7.0.10/jquery.nouislider.min.js"></script>
+<link href="site_libs/selectize-0.12.0/selectize.bootstrap3.css" rel="stylesheet">
+<script src="site_libs/selectize-0.12.0/selectize.min.js"></script>
+<link href="site_libs/crosstalk-1.2.0/css/crosstalk.min.css" rel="stylesheet">
+<script src="site_libs/crosstalk-1.2.0/js/crosstalk.min.js"></script>
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
 
 </head>
 
@@ -147,7 +197,24 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-sidebar-glass" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar,#quarto-sidebar-glass"></div>
 <!-- margin-sidebar -->
     <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
-        
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">Table of contents</h2>
+   
+  <ul>
+  <li><a href="#data" id="toc-data" class="nav-link active" data-scroll-target="#data"><span class="header-section-number">5.1</span> Data</a>
+  <ul class="collapse">
+  <li><a href="#calculations" id="toc-calculations" class="nav-link" data-scroll-target="#calculations"><span class="header-section-number">5.1.1</span> Calculations</a></li>
+  </ul></li>
+  <li><a href="#heritability" id="toc-heritability" class="nav-link" data-scroll-target="#heritability"><span class="header-section-number">5.2</span> Heritability</a>
+  <ul class="collapse">
+  <li><a href="#mcmcglmm-model" id="toc-mcmcglmm-model" class="nav-link" data-scroll-target="#mcmcglmm-model"><span class="header-section-number">5.2.1</span> MCMCglmm model</a></li>
+  <li><a href="#estimate-heritability-based-on-mcmcglmm-output" id="toc-estimate-heritability-based-on-mcmcglmm-output" class="nav-link" data-scroll-target="#estimate-heritability-based-on-mcmcglmm-output"><span class="header-section-number">5.2.2</span> Estimate heritability based on MCMCglmm output</a></li>
+  </ul></li>
+  <li><a href="#part-i-bootstrapping-cv_g" id="toc-part-i-bootstrapping-cv_g" class="nav-link" data-scroll-target="#part-i-bootstrapping-cv_g"><span class="header-section-number">5.3</span> Part I: Bootstrapping <span class="math inline">\(CV_{G}\)</span></a></li>
+  <li><a href="#part-ii-data-curation" id="toc-part-ii-data-curation" class="nav-link" data-scroll-target="#part-ii-data-curation"><span class="header-section-number">5.4</span> Part II: Data curation</a></li>
+  <li><a href="#part-iii-visualization" id="toc-part-iii-visualization" class="nav-link" data-scroll-target="#part-iii-visualization"><span class="header-section-number">5.5</span> Part III: Visualization</a></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
@@ -169,8 +236,359 @@ ul.task-list li input[type="checkbox"] {
 
 </header>
 
+<section id="data" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="data"><span class="header-section-number">5.1</span> Data</h2>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># packages</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(lmerTest)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(tidyverse)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"./data/tnc_spring_2022.csv"</span>, <span class="at">header=</span><span class="cn">TRUE</span>)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>plot_cor <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"./data/plot_coordinates.csv"</span>, <span class="at">header=</span><span class="cn">TRUE</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># add coordinates </span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>data <span class="ot">&lt;-</span> <span class="fu">merge</span>(data,plot_cor[,<span class="fu">c</span>(<span class="st">"Replication"</span>,<span class="st">"POINT_X"</span>,<span class="st">"POINT_Y"</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<section id="calculations" class="level3" data-number="5.1.1">
+<h3 data-number="5.1.1" class="anchored" data-anchor-id="calculations"><span class="header-section-number">5.1.1</span> Calculations</h3>
+<ul>
+<li><p>phenotypic variance (Vp) = variance of phenotypic trait observed</p>
+<ul>
+<li>Vp = var(model residuals x model intercept)</li>
+</ul></li>
+<li><p>Additive genetic variance (Va) = heritability of the trait x phenotypic variance (Vp)</p>
+<ul>
+<li>Va = H2 x Vp</li>
+</ul></li>
+<li><p>Phenotypic variance (<span class="math inline">\(V_{P}\)</span>) = variance of phenotypic trait observed</p>
+<ul>
+<li><span class="math inline">\(V_{P}\)</span> = var(model residuals x model intercept)</li>
+</ul></li>
+<li><p>Additive genetic variance (Va) = heritability of the trait x phenotypic variance (Vp)</p>
+<p><span class="math display">\[V_{A} = h^{2}.{V_{P}}\]</span> Where,<br>
+<span class="math inline">\(V_{A}\)</span> is additie genetic variance,<br>
+<span class="math inline">\(h^{2}\)</span> is narrow sense heritability,<br>
+<span class="math inline">\(V_{P}\)</span> is phenotypic variance</p></li>
+<li><p>Coefficent of Evolvability (<span class="math inline">\(CV_{A}\)</span>) = the evolutionary potential of a trait to evolve</p>
+<p><span class="math display">\[CV_{A} = \frac{\sqrt{V_{A}}}{\overline{X}}\]</span><br>
+Where,<br>
+<span class="math inline">\(e_{\mu}\)</span> is evolvability,<br>
+<span class="math inline">\(V_{A}\)</span> is additie genetic variance,<br>
+<span class="math inline">\(\overline{X}\)</span> is phenotypic mean</p></li>
+</ul>
+<p>We however use broad sense heritability (<span class="math inline">\(H^{2} = V_{G}/V_{P}\)</span>) in our calculation, thus we take <span class="math inline">\(V_{G}\)</span> for calculating evolvability instead of <span class="math inline">\(V_{A}\)</span>.</p>
+<p><span class="math display">\[CV_{G} = \frac{\sqrt{V_{G}}}{\overline{X}}\]</span></p>
+</section>
+</section>
+<section id="heritability" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="heritability"><span class="header-section-number">5.2</span> Heritability</h2>
+<section id="mcmcglmm-model" class="level3" data-number="5.2.1">
+<h3 data-number="5.2.1" class="anchored" data-anchor-id="mcmcglmm-model"><span class="header-section-number">5.2.1</span> MCMCglmm model</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="do">## note</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="co"># gw - growth</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># B - lmer family blups (means)</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(lmerTest)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(dplyr)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(tidyr)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">require</span>(MCMCglmm)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># set priors </span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>Prior <span class="ot">&lt;-</span> <span class="fu">list</span>(<span class="at">R=</span><span class="fu">list</span>(<span class="at">V=</span><span class="dv">1</span>, <span class="at">nu=</span><span class="fl">0.002</span>),           <span class="co"># R - prior on residual variance  </span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>              <span class="at">G=</span><span class="fu">list</span>(<span class="at">G1=</span><span class="fu">list</span>(<span class="at">V=</span><span class="dv">1</span>, <span class="at">nu=</span><span class="fl">0.002</span>),   <span class="co"># G prior for random variance # G1 = for first random effect, here its Source</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                     <span class="at">G2=</span><span class="fu">list</span>(<span class="at">V=</span><span class="dv">1</span>, <span class="at">nu=</span><span class="fl">0.002</span>)))  <span class="co"># G2 = for second random effect, here its Replication</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Common garden data </span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># height</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>growth_2020 <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"./data/MCMCglmm/Growth_2020.csv"</span>, <span class="at">stringsAsFactors =</span> T)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>growth_2020<span class="sc">$</span>mBed <span class="ot">&lt;-</span> <span class="fu">paste0</span>(growth_2020<span class="sc">$</span>Garden,<span class="st">"_"</span>,growth_2020<span class="sc">$</span>Bed)</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Meta data</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>Meta <span class="ot">&lt;-</span> <span class="fu">read.table</span>(<span class="st">"./data/RS_Exome_metadata.txt"</span>, <span class="at">sep=</span><span class="st">"</span><span class="sc">\t</span><span class="st">"</span>,<span class="at">header=</span>T)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># remove family YRB_01</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>Meta <span class="ot">&lt;-</span> Meta[Meta<span class="sc">$</span>Family<span class="sc">!=</span><span class="st">"YRB_01"</span>,]</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>meta <span class="ot">&lt;-</span> <span class="fu">as.data.frame</span>(Meta<span class="sc">$</span>Family);<span class="fu">colnames</span>(meta)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">"Family"</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="fu">nrow</span>(meta)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 339</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># height 2019</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>growth_edge <span class="ot">&lt;-</span> growth_2020 <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Region<span class="sc">==</span><span class="st">"Edge"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">unique</span>(growth_edge<span class="sc">$</span>Family)) <span class="co"># no. of familes considered</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 110</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(<span class="fu">unique</span>(growth_edge<span class="sc">$</span>Population)) <span class="co"># no. of populations considered</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>[1] 23</code></pre>
+</div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># per garden site</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># MD</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>growth_edge_MD <span class="ot">&lt;-</span> growth_2020 <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Garden<span class="sc">==</span><span class="st">"Maryland"</span>)</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(growth_edge_MD)[<span class="dv">19</span>] <span class="ot">&lt;-</span> <span class="st">"Height"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># One year height growth </span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>OneYear_height_mod_edge_MD <span class="ot">&lt;-</span>  <span class="fu">MCMCglmm</span>(Height <span class="sc">~</span> <span class="dv">1</span>,</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                                <span class="at">random=</span> <span class="sc">~</span> Family <span class="sc">+</span> Population,</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>                                <span class="at">family=</span><span class="st">"gaussian"</span>,</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>                                <span class="at">data=</span>growth_edge_MD,</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>                                <span class="at">prior=</span>Prior, <span class="at">pr=</span><span class="cn">TRUE</span>, <span class="at">burnin=</span><span class="dv">10000</span> , <span class="at">nitt=</span><span class="dv">100000000</span> , <span class="at">thin=</span><span class="dv">1000</span>)</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="co"># saveRDS(OneYear_height_mod_edge_MD,"/home/Anoob/mydata/Anoob/TNC/OUTPUT/MCMCglmm/OneYear_height_mod_edge_MD_2019")</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="estimate-heritability-based-on-mcmcglmm-output" class="level3" data-number="5.2.2">
+<h3 data-number="5.2.2" class="anchored" data-anchor-id="estimate-heritability-based-on-mcmcglmm-output"><span class="header-section-number">5.2.2</span> Estimate heritability based on MCMCglmm output</h3>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="do">## A) One year height</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co"># One year height </span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>OneYear_height_mod_edge_MD <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"./OUTPUT/MCMCglmm/OneYear_height_mod_edge_MD_2019"</span>)</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># heritability </span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>OneYear_height_mod_edge_MD_H2 <span class="ot">&lt;-</span> (<span class="dv">2</span><span class="sc">*</span>(OneYear_height_mod_edge_MD<span class="sc">$</span>VCV[,<span class="st">"Family"</span>]) <span class="sc">+</span> OneYear_height_mod_edge_MD<span class="sc">$</span>VCV[,<span class="st">"Population"</span>])<span class="sc">/</span><span class="fu">rowSums</span>(OneYear_height_mod_edge_MD[[<span class="st">"VCV"</span>]])</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="fu">posterior.mode</span>(OneYear_height_mod_edge_MD_H2)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+</section>
+<section id="part-i-bootstrapping-cv_g" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="part-i-bootstrapping-cv_g"><span class="header-section-number">5.3</span> Part I: Bootstrapping <span class="math inline">\(CV_{G}\)</span></h2>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+bootstrap the <span class="math inline">\(CV_{G}\)</span> for the pooled data
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># function to bootstrap the CVg estiamtes per region</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>Evol_boot <span class="ot">&lt;-</span> <span class="cf">function</span>(data,n,model_test,maxiter,H2_val){</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>          <span class="cf">for</span> (i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>maxiter) {</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>          <span class="co">#Creating a resampled dataset from the sample data</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>          subset_data <span class="ot">=</span> data[<span class="fu">sample</span>(<span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(data), <span class="at">size=</span>n, <span class="at">replace =</span> <span class="cn">TRUE</span>),]</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>          </span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>          <span class="co">#Running the regression on these data</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>          model <span class="ot">&lt;-</span> <span class="fu">lmer</span>(model_test, <span class="at">data =</span> subset_data)</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>          </span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>          <span class="co"># pooled</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>          subset_data<span class="sc">$</span>pooledVp <span class="ot">&lt;-</span> <span class="fu">predict</span>(model)</span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>          </span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>          <span class="co"># model predictions</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>                VP_temp_tot <span class="ot">&lt;-</span> subset_data</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>                VP_temp_tot <span class="ot">&lt;-</span> VP_temp_tot<span class="sc">$</span>pooledVp</span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>          </span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>          <span class="co"># remove outliers</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>                quartiles <span class="ot">&lt;-</span> <span class="fu">quantile</span>(VP_temp_tot, <span class="at">probs=</span><span class="fu">c</span>(.<span class="dv">25</span>, .<span class="dv">75</span>), <span class="at">na.rm =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>                IQR <span class="ot">&lt;-</span> <span class="fu">IQR</span>(VP_temp_tot)</span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>                 </span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>                Lower <span class="ot">&lt;-</span> quartiles[<span class="dv">1</span>] <span class="sc">-</span> <span class="fl">1.5</span><span class="sc">*</span>IQR</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>                Upper <span class="ot">&lt;-</span> quartiles[<span class="dv">2</span>] <span class="sc">+</span> <span class="fl">1.5</span><span class="sc">*</span>IQR </span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>                </span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>                <span class="co"># outliers removed</span></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>                VP_temp_tot <span class="ot">&lt;-</span> <span class="fu">subset</span>(VP_temp_tot, VP_temp_tot <span class="sc">&gt;</span> Lower <span class="sc">&amp;</span> VP_temp_tot <span class="sc">&lt;</span> Upper) </span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>          </span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>          <span class="co"># pooled results</span></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>          final_df <span class="ot">&lt;-</span> <span class="fu">data.frame</span>(<span class="at">Run=</span>i,</span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">Source =</span> <span class="st">"Pooled"</span>,</span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">Vp =</span> <span class="fu">var</span>(VP_temp_tot),</span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">mean =</span> <span class="fu">mean</span>(VP_temp_tot),</span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">H2 =</span> H2_val,</span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">Va =</span> <span class="fu">var</span>(VP_temp_tot)<span class="sc">*</span>H2_val,</span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>                                  <span class="at">CVa =</span> <span class="fu">sqrt</span>(<span class="fu">var</span>(VP_temp_tot)<span class="sc">*</span>H2_val)<span class="sc">/</span><span class="fu">mean</span>(VP_temp_tot))   </span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>          </span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>          <span class="co"># Append to dataframe           </span></span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>          output <span class="ot">&lt;-</span> <span class="fu">rbind</span>(output, final_df) </span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(output)</span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># input vals</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>H2_val <span class="ot">&lt;-</span> <span class="fl">0.396</span> <span class="co"># heritability for height</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>model_test <span class="ot">&lt;-</span> Height <span class="sc">~</span> <span class="dv">1</span> <span class="sc">+</span> Source <span class="sc">+</span> (<span class="dv">1</span><span class="sc">|</span>Replication)      </span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>output <span class="ot">&lt;-</span> <span class="cn">NULL</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>MD_dat <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Region<span class="sc">==</span><span class="st">"Maryland"</span>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>WV_dat <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Region<span class="sc">==</span><span class="st">"West_Virginia"</span>)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>VA_dat <span class="ot">&lt;-</span> data <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Region<span class="sc">==</span><span class="st">"Virginia"</span>)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="co"># boot strap the CVg for the regions</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>) <span class="co"># set seed</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>MD_boot_CVG <span class="ot">&lt;-</span> <span class="fu">Evol_boot</span>(<span class="at">data=</span>MD_dat,<span class="at">model_test=</span>model_test,</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>                         <span class="at">n=</span><span class="dv">200</span>,<span class="at">maxiter=</span><span class="dv">1000</span>,<span class="at">H2_val=</span>H2_val)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>WV_boot_CVG <span class="ot">&lt;-</span> <span class="fu">Evol_boot</span>(<span class="at">data=</span>WV_dat,<span class="at">model_test=</span>model_test,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>                         <span class="at">n=</span><span class="dv">200</span>,<span class="at">maxiter=</span><span class="dv">1000</span>,<span class="at">H2_val=</span>H2_val)</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>VA_boot_CVG <span class="ot">&lt;-</span> <span class="fu">Evol_boot</span>(<span class="at">data=</span>VA_dat,<span class="at">model_test=</span>model_test,</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>                         <span class="at">n=</span><span class="dv">200</span>,<span class="at">maxiter=</span><span class="dv">1000</span>,<span class="at">H2_val=</span>H2_val)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</section>
+<section id="part-ii-data-curation" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="part-ii-data-curation"><span class="header-section-number">5.4</span> Part II: Data curation</h2>
+<p><strong>Genetic diversity and Genetic load</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>GDGL_list <span class="ot">&lt;-</span> <span class="fu">readRDS</span>(<span class="st">"./data/Genetic_diversity_and_Genetic_load/GDGL_list"</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>MD_GDGL <span class="ot">&lt;-</span> GDGL_list<span class="sc">$</span>Maryland_GDGL</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>WV_GDGL <span class="ot">&lt;-</span> GDGL_list<span class="sc">$</span>West_Virginia_GDGL</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>VA_GDGL <span class="ot">&lt;-</span> GDGL_list<span class="sc">$</span>Virginia_GDGL</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>MD_GDGL <span class="ot">&lt;-</span> MD_GDGL[<span class="sc">-</span><span class="dv">1</span>,]</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>WV_GDGL <span class="ot">&lt;-</span> WV_GDGL[<span class="sc">-</span><span class="dv">1</span>,]</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>VA_GDGL <span class="ot">&lt;-</span> VA_GDGL[<span class="sc">-</span><span class="dv">1</span>,]</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<p><strong>GD:GL per source</strong></p>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>md_gdgl <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"./data/Genetic_diversity_and_Genetic_load/maryland_GDGL_per_source.csv"</span>);md_gdgl <span class="ot">&lt;-</span> md_gdgl[<span class="sc">-</span><span class="dv">1</span>,];<span class="fu">colnames</span>(md_gdgl)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">"Source"</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>wv_gdgl <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"./data/Genetic_diversity_and_Genetic_load/west_virginia_GDGL_per_source.csv"</span>);wv_gdgl <span class="ot">&lt;-</span> wv_gdgl[<span class="sc">-</span><span class="dv">1</span>,];<span class="fu">colnames</span>(wv_gdgl)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">"Source"</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>va_gdgl <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"./data/Genetic_diversity_and_Genetic_load/virginia_GDGL_per_source.csv"</span>);va_gdgl <span class="ot">&lt;-</span> va_gdgl[<span class="sc">-</span><span class="dv">1</span>,];<span class="fu">colnames</span>(va_gdgl)[<span class="dv">1</span>] <span class="ot">&lt;-</span> <span class="st">"Source"</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+<div class="tabset-margin-container"></div><div class="panel-tabset">
+<ul class="nav nav-tabs" role="tablist"><li class="nav-item" role="presentation"><a class="nav-link active" id="tabset-1-1-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-1" role="tab" aria-controls="tabset-1-1" aria-selected="true">Maryland</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-2-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-2" role="tab" aria-controls="tabset-1-2" aria-selected="false">West Virginia</a></li><li class="nav-item" role="presentation"><a class="nav-link" id="tabset-1-3-tab" data-bs-toggle="tab" data-bs-target="#tabset-1-3" role="tab" aria-controls="tabset-1-3" aria-selected="false">Virginia</a></li></ul>
+<div class="tab-content">
+<div id="tabset-1-1" class="tab-pane active" role="tabpanel" aria-labelledby="tabset-1-1-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Mean CVg</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>CVg_pop_MD <span class="ot">&lt;-</span> MD_boot_CVG <span class="sc">%&gt;%</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mean_CVg =</span> <span class="fu">mean</span>(CVa)) <span class="sc">%&gt;%</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">SD =</span> <span class="fu">sd</span>(CVa)) <span class="sc">%&gt;%</span> </span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() </span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>CVg_pop_MD<span class="sc">$</span>Region <span class="ot">&lt;-</span> <span class="st">"Maryland"</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>CVg_pop_MD<span class="sc">$</span>Source <span class="ot">&lt;-</span> <span class="st">"Pooled"</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>CVg_pop_MD<span class="sc">$</span>Vp <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>CVg_pop_MD<span class="sc">$</span>mean <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>CVg_pop_MD<span class="sc">$</span>H2 <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>CVg_pop_MD<span class="sc">$</span>Va <span class="ot">&lt;-</span> <span class="cn">NA</span> </span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>CVg_pop_MD <span class="ot">&lt;-</span> <span class="fu">unique</span>(CVg_pop_MD[,<span class="fu">c</span>(<span class="st">"Region"</span>,<span class="st">"Source"</span>,<span class="st">"Vp"</span>,<span class="st">"mean"</span>,<span class="st">"H2"</span>, <span class="st">"Va"</span>,<span class="st">"mean_CVg"</span>,<span class="st">"SD"</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-1-2" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-2-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Mean CVg</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>CVg_pop_WV <span class="ot">&lt;-</span> WV_boot_CVG <span class="sc">%&gt;%</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mean_CVg =</span> <span class="fu">mean</span>(CVa)) <span class="sc">%&gt;%</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">SD =</span> <span class="fu">sd</span>(CVa)) <span class="sc">%&gt;%</span> </span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() </span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>CVg_pop_WV<span class="sc">$</span>Region <span class="ot">&lt;-</span> <span class="st">"West_Virginia"</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>CVg_pop_WV<span class="sc">$</span>Source <span class="ot">&lt;-</span> <span class="st">"Pooled"</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>CVg_pop_WV<span class="sc">$</span>Vp <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>CVg_pop_WV<span class="sc">$</span>mean <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>CVg_pop_WV<span class="sc">$</span>H2 <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>CVg_pop_WV<span class="sc">$</span>Va <span class="ot">&lt;-</span> <span class="cn">NA</span> </span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>CVg_pop_WV <span class="ot">&lt;-</span> <span class="fu">unique</span>(CVg_pop_WV[,<span class="fu">c</span>(<span class="st">"Region"</span>,<span class="st">"Source"</span>,<span class="st">"Vp"</span>,<span class="st">"mean"</span>,<span class="st">"H2"</span>, <span class="st">"Va"</span>,<span class="st">"mean_CVg"</span>,<span class="st">"SD"</span>)])</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+<div id="tabset-1-3" class="tab-pane" role="tabpanel" aria-labelledby="tabset-1-3-tab">
+<div class="cell">
+<div class="sourceCode cell-code" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Mean CVg</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>CVg_pop_VA <span class="ot">&lt;-</span> VA_boot_CVG <span class="sc">%&gt;%</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">mean_CVg =</span> <span class="fu">mean</span>(CVa)) <span class="sc">%&gt;%</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">SD =</span> <span class="fu">sd</span>(CVa)) <span class="sc">%&gt;%</span> </span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>() </span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>CVg_pop_VA<span class="sc">$</span>Region <span class="ot">&lt;-</span> <span class="st">"Virginia"</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>CVg_pop_VA<span class="sc">$</span>Source <span class="ot">&lt;-</span> <span class="st">"Pooled"</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>CVg_pop_VA<span class="sc">$</span>Vp <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>CVg_pop_VA<span class="sc">$</span>mean <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>CVg_pop_VA<span class="sc">$</span>H2 <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>CVg_pop_VA<span class="sc">$</span>Va <span class="ot">&lt;-</span> <span class="cn">NA</span> </span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>CVg_pop_VA <span class="ot">&lt;-</span> <span class="fu">unique</span>(CVg_pop_VA[,<span class="fu">c</span>(<span class="st">"Region"</span>,<span class="st">"Source"</span>,<span class="st">"Vp"</span>,<span class="st">"mean"</span>,<span class="st">"H2"</span>, <span class="st">"Va"</span>,<span class="st">"mean_CVg"</span>,<span class="st">"SD"</span>)])</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>CVg_pooled <span class="ot">&lt;-</span> <span class="fu">rbind</span>(CVg_pop_MD,CVg_pop_WV,CVg_pop_VA)</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(CVg_pooled)[<span class="dv">7</span>] <span class="ot">&lt;-</span> <span class="st">"CVg"</span></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>CVg_table <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"./data/CVa_TNC_H2"</span>)</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>CVg_table <span class="ot">&lt;-</span> CVg_table[CVg_table<span class="sc">$</span>Source<span class="sc">!=</span><span class="st">"Pooled"</span>,]</span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a><span class="fu">colnames</span>(CVg_table)[<span class="dv">7</span>] <span class="ot">&lt;-</span> <span class="st">"CVg"</span></span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>CVg_table<span class="sc">$</span>SD <span class="ot">&lt;-</span> <span class="cn">NA</span></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>CVg_comb <span class="ot">&lt;-</span> <span class="fu">rbind</span>(CVg_table,CVg_pooled)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</div>
+</div>
+</div>
+</div>
+<div class="cell">
+<div class="sourceCode cell-code" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># merge data</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>CVg_pop_MD <span class="ot">&lt;-</span> <span class="fu">merge</span>(CVg_comb <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Region<span class="sc">==</span><span class="st">"Maryland"</span>),md_gdgl,<span class="at">all.x=</span>T)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>CVg_pop_MD[CVg_pop_MD<span class="sc">$</span>Source<span class="sc">==</span><span class="st">"Pooled"</span>,<span class="dv">9</span>] <span class="ot">&lt;-</span> <span class="fu">round</span>(MD_GDGL[<span class="st">"XCS_XDS_XPK"</span>,]<span class="sc">$</span>Hexp,<span class="dv">5</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>CVg_pop_MD[CVg_pop_MD<span class="sc">$</span>Source<span class="sc">==</span><span class="st">"Pooled"</span>,<span class="dv">10</span>] <span class="ot">&lt;-</span> <span class="fu">round</span>(MD_GDGL[<span class="st">"XCS_XDS_XPK"</span>,]<span class="sc">$</span>GenLoad,<span class="dv">5</span>)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>CVg_pop_MD<span class="sc">$</span>GDGL <span class="ot">&lt;-</span> CVg_pop_MD<span class="sc">$</span>Hexp<span class="sc">/</span>CVg_pop_MD<span class="sc">$</span>GenLoad</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>CVg_pop_WV <span class="ot">&lt;-</span> <span class="fu">merge</span>(CVg_comb <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Region<span class="sc">==</span><span class="st">"West_Virginia"</span>),wv_gdgl,<span class="at">all.x=</span>T)</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>CVg_pop_WV[CVg_pop_WV<span class="sc">$</span>Source<span class="sc">==</span><span class="st">"Pooled"</span>,<span class="dv">9</span>] <span class="ot">&lt;-</span> <span class="fu">round</span>(WV_GDGL[<span class="st">"XCS_XDS_XPK_XSK"</span>,]<span class="sc">$</span>Hexp,<span class="dv">5</span>)</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>CVg_pop_WV[CVg_pop_WV<span class="sc">$</span>Source<span class="sc">==</span><span class="st">"Pooled"</span>,<span class="dv">10</span>] <span class="ot">&lt;-</span> <span class="fu">round</span>(WV_GDGL[<span class="st">"XCS_XDS_XPK_XSK"</span>,]<span class="sc">$</span>GenLoad,<span class="dv">5</span>)</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>CVg_pop_WV<span class="sc">$</span>GDGL <span class="ot">&lt;-</span> CVg_pop_WV<span class="sc">$</span>Hexp<span class="sc">/</span>CVg_pop_WV<span class="sc">$</span>GenLoad</span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>CVg_pop_VA <span class="ot">&lt;-</span> <span class="fu">merge</span>(CVg_comb <span class="sc">%&gt;%</span> <span class="fu">filter</span>(Region<span class="sc">==</span><span class="st">"Virginia"</span>),va_gdgl,<span class="at">all.x=</span>T)</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>CVg_pop_VA[CVg_pop_VA<span class="sc">$</span>Source<span class="sc">==</span><span class="st">"Pooled"</span>,<span class="dv">9</span>] <span class="ot">&lt;-</span> <span class="fu">round</span>(VA_GDGL[<span class="st">"BFA_KOS_XDS_XPK"</span>,]<span class="sc">$</span>Hexp,<span class="dv">5</span>)</span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>CVg_pop_VA[CVg_pop_VA<span class="sc">$</span>Source<span class="sc">==</span><span class="st">"Pooled"</span>,<span class="dv">10</span>] <span class="ot">&lt;-</span> <span class="fu">round</span>(VA_GDGL[<span class="st">"BFA_KOS_XDS_XPK"</span>,]<span class="sc">$</span>GenLoad,<span class="dv">5</span>)</span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>CVg_pop_VA<span class="sc">$</span>GDGL <span class="ot">&lt;-</span> CVg_pop_VA<span class="sc">$</span>Hexp<span class="sc">/</span>CVg_pop_VA<span class="sc">$</span>GenLoad</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>CVg_gdgl <span class="ot">&lt;-</span> <span class="fu">rbind</span>(CVg_pop_MD,CVg_pop_WV,CVg_pop_VA)</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>CVg_gdgl <span class="ot">&lt;-</span> CVg_gdgl <span class="sc">%&gt;%</span> <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span><span class="fu">round</span>(., <span class="dv">3</span>)))</span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>CVg_gdgl<span class="sc">$</span>Region <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(CVg_gdgl<span class="sc">$</span>Region)</span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>CVg_gdgl<span class="sc">$</span>Source <span class="ot">&lt;-</span> <span class="fu">as.factor</span>(CVg_gdgl<span class="sc">$</span>Source)</span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>CVg_gdgl<span class="sc">$</span>Region <span class="ot">&lt;-</span> <span class="fu">factor</span>(CVg_gdgl<span class="sc">$</span>Region, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"Maryland"</span>,<span class="st">"West_Virginia"</span>,<span class="st">"Virginia"</span>))</span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>CVg_gdgl<span class="sc">$</span>Source <span class="ot">&lt;-</span> <span class="fu">factor</span>(CVg_gdgl<span class="sc">$</span>Source, <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"BFA"</span>,<span class="st">"KOS"</span>,<span class="st">"XCS"</span>,<span class="st">"XDS"</span>,<span class="st">"XPK"</span>,<span class="st">"XSK"</span>,<span class="st">"Pooled"</span>))</span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>DT<span class="sc">::</span><span class="fu">datatable</span>(CVg_gdgl, <span class="at">rownames =</span> T, <span class="at">options =</span> <span class="fu">list</span>(<span class="at">pageLength =</span> <span class="dv">14</span>, <span class="at">dom =</span> <span class="st">'tip'</span>),</span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a>          <span class="at">filter =</span> <span class="st">'top'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-4112df52be4eb071610a" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-4112df52be4eb071610a">{"x":{"filter":"top","vertical":false,"filterHTML":"<tr>\n  <td><\/td>\n  <td data-type=\"factor\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"width: 100%; display: none;\">\n      <select multiple=\"multiple\" style=\"width: 100%;\" data-options=\"[&quot;BFA&quot;,&quot;KOS&quot;,&quot;XCS&quot;,&quot;XDS&quot;,&quot;XPK&quot;,&quot;XSK&quot;,&quot;Pooled&quot;]\"><\/select>\n    <\/div>\n  <\/td>\n  <td data-type=\"factor\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"width: 100%; display: none;\">\n      <select multiple=\"multiple\" style=\"width: 100%;\" data-options=\"[&quot;Maryland&quot;,&quot;West_Virginia&quot;,&quot;Virginia&quot;]\"><\/select>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0.054\" data-max=\"2.164\" data-scale=\"3\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"22.057\" data-max=\"28.082\" data-scale=\"3\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\" disabled=\"\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0\" data-max=\"1\" data-scale=\"3\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0.021\" data-max=\"0.857\" data-scale=\"3\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0.005\" data-max=\"0.04\" data-scale=\"3\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0.011\" data-max=\"0.014\" data-scale=\"3\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0.141\" data-max=\"0.178\" data-scale=\"3\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0.96\" data-max=\"1.051\" data-scale=\"3\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n  <td data-type=\"number\" style=\"vertical-align: top;\">\n    <div class=\"form-group has-feedback\" style=\"margin-bottom: auto;\">\n      <input type=\"search\" placeholder=\"All\" class=\"form-control\" style=\"width: 100%;\"/>\n      <span class=\"glyphicon glyphicon-remove-circle form-control-feedback\"><\/span>\n    <\/div>\n    <div style=\"display: none;position: absolute;width: 200px;opacity: 1\">\n      <div data-min=\"0.145\" data-max=\"0.183\" data-scale=\"3\"><\/div>\n      <span style=\"float: left;\"><\/span>\n      <span style=\"float: right;\"><\/span>\n    <\/div>\n  <\/td>\n<\/tr>","data":[["1","2","3","4","5","6","7","8","9","10","11","12","13","14"],["Pooled","XCS","XDS","XPK","Pooled","XCS","XDS","XPK","XSK","BFA","KOS","Pooled","XDS","XPK"],["Maryland","Maryland","Maryland","Maryland","West_Virginia","West_Virginia","West_Virginia","West_Virginia","West_Virginia","Virginia","Virginia","Virginia","Virginia","Virginia"],[null,2.164,0.247,0.423,null,0.055,0.119,0.729,0.444,0.679,0.582,null,0.054,0.87],[null,28.082,25.652,26.21,null,27.273,23.947,26.489,28.04,27.338,27.228,null,22.057,25.052],[null,0.396,0.396,0.396,null,0.396,0.396,0.396,0.396,0.396,0.396,null,0.396,0.396],[null,0.857,0.098,0.168,null,0.022,0.047,0.289,0.176,0.269,0.231,null,0.021,0.344],[0.033,0.033,0.012,0.016,0.04,0.005,0.008999999999999999,0.02,0.015,0.019,0.018,0.039,0.007,0.023],[0.011,null,null,null,0.013,null,null,null,null,null,null,0.014,null,null],[0.174,0.141,0.165,0.16,0.176,0.141,0.165,0.16,0.153,0.163,0.169,0.178,0.165,0.16],[0.961,0.966,0.96,0.99,0.962,0.966,0.96,0.99,1.051,1.013,1.026,1.011,0.96,0.99],[0.181,0.146,0.172,0.162,0.183,0.146,0.172,0.162,0.145,0.161,0.164,0.176,0.172,0.162]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th> <\/th>\n      <th>Source<\/th>\n      <th>Region<\/th>\n      <th>Vp<\/th>\n      <th>mean<\/th>\n      <th>H2<\/th>\n      <th>Va<\/th>\n      <th>CVg<\/th>\n      <th>SD<\/th>\n      <th>Hexp<\/th>\n      <th>GenLoad<\/th>\n      <th>GDGL<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"pageLength":14,"dom":"tip","columnDefs":[{"className":"dt-right","targets":[3,4,5,6,7,8,9,10,11]},{"orderable":false,"targets":0}],"order":[],"autoWidth":false,"orderClasses":false,"orderCellsTop":true,"lengthMenu":[10,14,25,50,100]}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+</section>
+<section id="part-iii-visualization" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="part-iii-visualization"><span class="header-section-number">5.5</span> Part III: Visualization</h2>
+<div class="cell" data-fig.dim="[8,7.5]">
+<div class="sourceCode cell-code" id="cb23"><pre class="sourceCode r fold-hide code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># dim 800w 780h jpg 7.8h 8.0w pdf</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>CVg_gdgl_plot <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(CVg_gdgl, <span class="fu">aes</span>(<span class="at">x=</span> GDGL, <span class="at">y =</span> CVg, <span class="at">label =</span> Source)) <span class="sc">+</span> </span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>                <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> Source, </span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>                           <span class="at">size =</span> <span class="dv">4</span>, <span class="at">alpha =</span> <span class="fl">0.8</span>)) <span class="sc">+</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>                <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"#FFD92F"</span>,<span class="st">"#FC8D59"</span>,<span class="st">"#D73027"</span>,<span class="st">"#1B9E77"</span>,<span class="st">"#1F78B4"</span>,<span class="st">"#E78AC3"</span>,<span class="st">"black"</span>))<span class="sc">+</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>                </span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>                <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin=</span>CVg<span class="sc">-</span>SD,<span class="at">ymax=</span>CVg<span class="sc">+</span>SD, <span class="at">color=</span>Source)) <span class="sc">+</span> </span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>                                              <span class="co"># theme</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>                                              <span class="fu">ylab</span>(<span class="fu">bquote</span>(Evolvability<span class="sc">~</span>(CV[G]))) <span class="sc">+</span> </span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>                                              <span class="fu">xlab</span>(<span class="st">"Genetic diversity:Genetic load"</span>) <span class="sc">+</span> </span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>                                              <span class="fu">theme_bw</span>(<span class="at">base_size =</span> <span class="dv">11</span>, <span class="at">base_family =</span> <span class="st">"Times"</span>) <span class="sc">+</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>                                              <span class="fu">theme</span>(<span class="at">axis.text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">14</span>), </span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">axis.title=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">18</span>),</span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">panel.background =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">legend.background =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">panel.grid =</span> <span class="fu">element_blank</span>(), </span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">plot.background =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">legend.title =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">15</span>),</span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">legend.text=</span><span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">15</span>), </span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>                                                    <span class="at">strip.text =</span> <span class="fu">element_text</span>(<span class="at">size=</span><span class="dv">30</span>))</span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>CVg_gdgl_plot <span class="sc">+</span> <span class="fu">guides</span>(<span class="at">alpha =</span> <span class="st">"none"</span>, <span class="at">size =</span> <span class="st">"none"</span>) <span class="sc">+</span> <span class="fu">facet_grid</span>(Region<span class="sc">~</span>.)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="cell-output-display">
+<p><img src="evolvability_files/figure-html/unnamed-chunk-19-1.png" class="img-fluid" width="768"></p>
+</div>
+</div>
 
 
+</section>
 
 </main> <!-- /main -->
 <script id="quarto-html-after-body" type="application/javascript">
