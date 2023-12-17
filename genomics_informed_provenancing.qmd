@@ -72,6 +72,7 @@ TAB_pop_westvirginia <- TAB_pop[which(names(TAB_pop)%in%info_pops$Site[which(inf
 TAB_pop_virginia <- TAB_pop[which(names(TAB_pop)%in%info_pops$Site[which(info_pops$Region=="E" & (info_pops$State=="WV" & !info_pops$Site%in%c("XCV") | info_pops$Site%in%c("GMF","CR","DG","RP")))])] # remove HR and CV for the paper
 ```
 
+### Different fucntions applied for source selection  
 
 :::{.panel-tabset}
 
@@ -400,9 +401,49 @@ GDGL_plot <- ggplot(GDGL_long_dat, aes(x=GD_GL,color=Plot,fill=Plot)) + facet_wr
 
 ### Final Viz.
 ```{r, warning=F, fig.dim=c(18,7)}
-GDGL_plot
+GDGL_plot # check 'Combine data' tab for the plot code
 ```
 
+### Stats  
+
+:::{.panel-tabset}  
+### Maryland
+```{r, warning=F, messages=F}
+res_maryland <- res_maryland[-1,]
+summary(res_maryland)
+```
+Which quantile does the selected source GD/GL fall into?  
+```{r}
+MD_quant <- res_maryland["XCS_XDS_XPK",]$GDGL
+
+# function to estimate which percentile the GD/GL of a source combination falls in
+ecdf_fun <- function(x,perc) ecdf(x)(perc)
+round(ecdf_fun(res_maryland$GDGL,MD_quant),3)
+```
+
+### West Virginia
+```{r, warning=F, messages=F}
+res_westvirginia_4 <- res_westvirginia_4[-1,]
+summary(res_westvirginia_4)
+```
+Which quantile does the selected source GD/GL fall into?  
+```{r}
+WV_quant <- res_westvirginia_4["XCS_XDS_XPK_XSK",]$GDGL
+round(ecdf_fun(res_westvirginia_4$GDGL,WV_quant),3) 
+# best source combination selected based on GD:GL  
+```
+
+### Virginia
+```{r, warning=F, messages=F}
+res_virginia_4 <- res_virginia_4[-1,]
+summary(res_virginia_4)
+```
+Which quantile does the selected source GD/GL fall into?  
+```{r}
+VA_quant <- res_virginia_4["BFA_KOS_XDS_XPK",]$GDGL
+round(ecdf_fun(res_virginia_4$GDGL,VA_quant),3) 
+```
+:::
 :::  
 
 
