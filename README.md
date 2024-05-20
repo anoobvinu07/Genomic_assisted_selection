@@ -1,6 +1,11 @@
 # Genomic assisted selection
-This is the repository for a manuscript under works, which is tentatively titled "Bringing genomics to the field: An integrative approach to seed sourcing for forest restoration".
+This is the repository for the manuscript titled "Bringing genomics to the field: An integrative approach to seed sourcing for forest restoration".
 
-Authors: Anoob Prakash, Thibaut Capblancq, Kathryn Shallows, Dave Seville, Deborah Landau, Chad Landress, Tal Jacobs and Stephen Keller
+Authors: Anoob Prakash, Thibaut Capblancq, Kathryn Shallows, Dave Seville, Deborah Landau, Chad Landress, Tal Jacobs and Stephen Keller  
+
+Abstract: 
+Climate change and anthropogenic land use are increasingly threatening the health and productivity of natural forest ecosystems. Assisted migration and reforestation are important tools to help mitigate these impacts, with recent calls for large-scale tree planting campaigns to help offset climate change. However, important questions remain about how best to source restoration seeds to ensure vigorous establishment and future adaptability. An often unaddressed issue is how to strategically sample the local gene pool to maximally capture standing genetic diversity while also avoiding the genetic load of deleterious mutations. Importantly, this optimization of diversity while minimizing load should explicitly take into account local adaptation to avoid outbreeding depression with the planting site. The benefits of this three-part strategy (diversity-load-adaptation) are to increase early-life fitness at planting, while also boosting the evolutionary potential to respond to future stressors. We provide a case study of our approach based on the forest tree red spruce (Picea rubens).
+
+Using published exome-capture sequencing, we first demonstrate a computational approach to finding the best n-sets from a candidate list of source populations local to the region of reforestation that collectively achieve high diversity and minimal load. Three different best n-sets of sources were then selected for collection and propagation, corresponding to target restoration sites in Maryland, Virginia and West Virginia of importance to the Nature Conservancy and the Central Appalachian Spruce Restoration Initiative. After 1 year of propagation under greenhouse conditions, TNC and CASRI planted 58,000 of these seedlings across 3 sites, totalling 255 acres. A subset of seedlings at each site were monitored 1 year later for establishment success. Our study shows the potential for integrating genomics into local-scale restoration, and the importance of building partnerships between academic researchers and applied conservation managers.
 
 github hosted at: https://anoobvinu07.github.io/Genomic_assisted_selection/
